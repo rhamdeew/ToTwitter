@@ -1,7 +1,7 @@
 ToTwitter
 =========
 
-Based application for export Faltson OP PC records Twitter.
+Application based on Phalcon PHP to export RSS-records into Twitter account.
 Long messages are divided into several smaller ones.
 
 Under the hood also:
