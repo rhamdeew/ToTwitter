@@ -1,0 +1,9 @@
+ToTwitter
+=========
+
+Based application for export Faltson OP PC records Twitter.
+Long messages are divided into several smaller ones.
+
+Under the hood also:
+https://github.com/dg/rss-php/
+https://github.com/Falicon/BitlyPHP (modified)
