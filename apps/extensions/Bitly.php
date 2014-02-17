@@ -13,7 +13,7 @@
 
 class Bitly {
 
-    private $bitlyKey = '';
+    private $bitlyKey = 'ebae42c4e2186e6e7b4a01bc101dadbac64ab390';
     private $bitlyLogin = '';
     private $bitly_clientid = '';
     private $bitly_secret = '';
