@@ -2,11 +2,12 @@
 
 class Feeds extends \Phalcon\Mvc\Model
 {
+
     /*
      * Забирает фид и подготавливает новые записи для постинга
      */
     public static function getForTweet() {
-        $l = 120;
+        $l = 110;
         $arr_twit = array();
 
         $feed = self::findFirst();
@@ -25,7 +26,9 @@ class Feeds extends \Phalcon\Mvc\Model
 
             if($post->count()==0) {
                 $twit = strip_tags(current($item->{'content:encoded'}));
-                $link = $bitly->bitly_v3_shorten($item->link, 'j.mp','LOGIN','SECRET');
+                $twit = preg_replace("/&#?[a-z0-9]+;/i","",$twit);
+
+                $link = $bitly->bitly_v3_shorten($item->link, 'j.mp','OAUTH_LOGIN','TOKEN');
                 $link = $link['url'];
 
                 $length = mb_strlen($twit,'utf-8');
@@ -33,36 +36,58 @@ class Feeds extends \Phalcon\Mvc\Model
                     $i = 0;
                     while($i<$length) {
                         $t = mb_substr($twit,$i,$l,'utf-8');
+
                         if(empty($t))
                             break;
+
                         $space_pos = mb_strrpos($t,' ',0,'utf-8');
                         if($space_pos>0 && mb_strlen($t,'utf-8')==$l) {
-                            if($i==0)
-                                $arr_twit[] = mb_substr($twit,$i,$i+$space_pos,'utf-8').'...';
-                            else
-                                $arr_twit[] = '...'.mb_substr($twit,$i,$i+$space_pos,'utf-8');
+                            if($i==0) {
+                                $arr_twit[]['tweet'] = mb_substr($twit,$i,$space_pos,'utf-8').'...';
+                                $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                            }
+                            else {
+                                $arr_twit[]['tweet'] = '...'.mb_substr($twit,$i,$space_pos,'utf-8');
+                                $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                            }
                             $i=$i+$space_pos;
                         }
                         else {
-                            if($i==0)
-                                $arr_twit[] = $t.'...';
-                            else
-                                $arr_twit[] = '...'.$t;
+                            if($i==0) {
+                                $arr_twit[]['tweet'] = $t.'...';
+                                $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                            }
+                            else {
+                                $arr_twit[]['tweet'] = '..:'.$t;
+                                $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                            }
                             $i=$i+$l;
                         }
                     }
                     end($arr_twit);
                     $key = key($arr_twit);
-                    $arr_twit[$key] = $arr_twit[$key].' '.$link;
+                    $arr_twit[$key]['tweet'] = $arr_twit[$key]['tweet'].' '.$link;
+                    $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item); //вот тут у последней части твита возможно все дублируется
                 }
-                else $arr_twit[] = $twit.' '.$link;
+                else {
+                    $arr_twit[]['tweet'] = $twit.' '.$link;
+                    $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item);
+                }
 
-                $posted = new Posted();
-                $posted->feed_id = $feed->id;
-                $posted->item_link = md5($item->link);
-                $posted->save();
             }
         }
         return $arr_twit;
     }
+
+    public static function tweetOptions($arr_twit,$feed,$item=NULL) {
+        end($arr_twit);
+        $key = key($arr_twit);
+        $arr_twit[$key]['feed_id'] = $feed->id;
+
+        if($item!==NULL)
+            $arr_twit[$key]['item_link'] = md5($item->link);
+
+        return $arr_twit;
+    }
+
 }
