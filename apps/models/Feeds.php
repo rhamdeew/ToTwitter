@@ -28,52 +28,55 @@ class Feeds extends \Phalcon\Mvc\Model
                 $twit = strip_tags(current($item->{'content:encoded'}));
                 $twit = preg_replace("/&#?[a-z0-9]+;/i","",$twit);
 
-                $link = $bitly->bitly_v3_shorten($item->link, 'j.mp','OAUTH_LOGIN','TOKEN');
-                $link = $link['url'];
+                $link = $bitly->bitly_v3_shorten($item->link, 'j.mp','OAUTH_LOGIN','OAUTH_TOKEN');
+
+                if(is_array($link) && isset($link['url']))
+                    $link = $link['url'];
 
                 $length = mb_strlen($twit,'utf-8');
-                if($length>$l) {
-                    $i = 0;
-                    while($i<$length) {
-                        $t = mb_substr($twit,$i,$l,'utf-8');
+                if($length>0) {
+                    if($length>$l) {
+                        $i = 0;
+                        while($i<$length) {
+                            $t = mb_substr($twit,$i,$l,'utf-8');
 
-                        if(empty($t))
-                            break;
+                            if(empty($t))
+                                break;
 
-                        $space_pos = mb_strrpos($t,' ',0,'utf-8');
-                        if($space_pos>0 && mb_strlen($t,'utf-8')==$l) {
-                            if($i==0) {
-                                $arr_twit[]['tweet'] = mb_substr($twit,$i,$space_pos,'utf-8').'...';
-                                $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                            $space_pos = mb_strrpos($t,' ',0,'utf-8');
+                            if($space_pos>0 && mb_strlen($t,'utf-8')==$l) {
+                                if($i==0) {
+                                    $arr_twit[]['tweet'] = mb_substr($twit,$i,$space_pos,'utf-8').'...';
+                                    $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                                }
+                                else {
+                                    $arr_twit[]['tweet'] = '...'.mb_substr($twit,$i,$space_pos,'utf-8');
+                                    $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                                }
+                                $i=$i+$space_pos;
                             }
                             else {
-                                $arr_twit[]['tweet'] = '...'.mb_substr($twit,$i,$space_pos,'utf-8');
-                                $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                                if($i==0) {
+                                    $arr_twit[]['tweet'] = $t.'...';
+                                    $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                                }
+                                else {
+                                    $arr_twit[]['tweet'] = '..:'.$t;
+                                    $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
+                                }
+                                $i=$i+$l;
                             }
-                            $i=$i+$space_pos;
                         }
-                        else {
-                            if($i==0) {
-                                $arr_twit[]['tweet'] = $t.'...';
-                                $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
-                            }
-                            else {
-                                $arr_twit[]['tweet'] = '..:'.$t;
-                                $arr_twit = Feeds::tweetOptions($arr_twit,$feed);
-                            }
-                            $i=$i+$l;
-                        }
+                        end($arr_twit);
+                        $key = key($arr_twit);
+                        $arr_twit[$key]['tweet'] = $arr_twit[$key]['tweet'].' '.$link;
+                        $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item); //вот тут у последней части твита возможно все дублируется
                     }
-                    end($arr_twit);
-                    $key = key($arr_twit);
-                    $arr_twit[$key]['tweet'] = $arr_twit[$key]['tweet'].' '.$link;
-                    $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item); //вот тут у последней части твита возможно все дублируется
+                    else {
+                        $arr_twit[]['tweet'] = $twit.' '.$link;
+                        $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item);
+                    }
                 }
-                else {
-                    $arr_twit[]['tweet'] = $twit.' '.$link;
-                    $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item);
-                }
-
             }
         }
         return $arr_twit;
