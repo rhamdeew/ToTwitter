@@ -20,6 +20,11 @@ class Bitly {
     private $bitly_api = 'http://api.bit.ly/v3/';
     private $bitly_oauth_api = 'https://api-ssl.bit.ly/v3/';
     private $bitly_oauth_access_token = 'https://api-ssl.bit.ly/oauth/';
+
+    public function setKey($key) {
+        $this->bitlyKey = $key;
+    }
+
     /**
      * Given a longUrl, get the bit.ly shortened version.
      *

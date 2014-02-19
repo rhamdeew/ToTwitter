@@ -71,6 +71,11 @@ class Application extends \Phalcon\Mvc\Application
 			return new \Phalcon\Mvc\Model\Manager();
 		});
 
+        $di->set('config',function() {
+            require "config.php";
+            return new \Phalcon\Config($config);
+        });
+
 		$this->setDI($di);
 	}
 

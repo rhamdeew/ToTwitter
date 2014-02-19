@@ -6,7 +6,7 @@ class Feeds extends \Phalcon\Mvc\Model
     /*
      * Забирает фид и подготавливает новые записи для постинга
      */
-    public static function getForTweet() {
+    public static function getForTweet($bitlyKey,$bitlyOauthLogin,$bitlyOauthToken) {
         $l = 110;
         $arr_twit = array();
 
@@ -15,6 +15,7 @@ class Feeds extends \Phalcon\Mvc\Model
         $rss = Feed::loadRss($feed->feed_url);
 
         $bitly = new Bitly();
+        $bitly->setKey($bitlyKey);
 
         foreach ($rss->item as $item) {
 
@@ -28,10 +29,10 @@ class Feeds extends \Phalcon\Mvc\Model
                 $twit = strip_tags(current($item->{'content:encoded'}));
                 $twit = preg_replace("/&#?[a-z0-9]+;/i","",$twit);
 
-                $link = $bitly->bitly_v3_shorten($item->link, 'j.mp','OAUTH_LOGIN','OAUTH_TOKEN');
-
+                $link = $bitly->bitly_v3_shorten($item->link, 'j.mp',$bitlyOauthLogin,$bitlyOauthToken);
                 if(is_array($link) && isset($link['url']))
                     $link = $link['url'];
+                else $link = '';
 
                 $length = mb_strlen($twit,'utf-8');
                 if($length>0) {
@@ -70,11 +71,13 @@ class Feeds extends \Phalcon\Mvc\Model
                         end($arr_twit);
                         $key = key($arr_twit);
                         $arr_twit[$key]['tweet'] = $arr_twit[$key]['tweet'].' '.$link;
-                        $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item); //вот тут у последней части твита возможно все дублируется
+                        if(is_object($feed))
+                            $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item);
                     }
                     else {
                         $arr_twit[]['tweet'] = $twit.' '.$link;
-                        $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item);
+                        if(is_object($feed))
+                            $arr_twit = Feeds::tweetOptions($arr_twit,$feed,$item);
                     }
                 }
             }

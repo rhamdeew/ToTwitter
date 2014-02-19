@@ -5,10 +5,16 @@ class IndexController extends \Phalcon\Mvc\Controller {
 	public function indexAction(){
 
         echo "<meta charset='utf-8'>";
-        $result = Feeds::getForTweet();
+        $config = $this->config;
 
-        $twitter = new Twitter(consumerKey, consumerSecret, accessToken, accessTokenSecret);
+        $result = Feeds::getForTweet($config->bitly->bitlyKey,$config->bitly->oauthLogin,$config->bitly->oauthToken);
 
+        $twitter = new Twitter(
+            $config->twitter->consumerKey,
+            $config->twitter->consumerSecret,
+            $config->twitter->accessToken,
+            $config->twitter->accessTokenSecret
+        );
 
         $i=0;
         foreach($result as $twit) {
@@ -26,7 +32,6 @@ class IndexController extends \Phalcon\Mvc\Controller {
             $i++;
         }
         echo "Total tweets sended: ".$i;
-//        Helper::Dump($statuses);
 	}
 	
 }
