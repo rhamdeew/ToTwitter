@@ -53,12 +53,8 @@ class Application extends \Phalcon\Mvc\Application
 		});
 
 		$di->set('db', function(){
-			return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-				"host" => "localhost",
-				"username" => "totwit",
-				"password" => "totwit",
-				"dbname" => "totwit"
-			));
+            require "../apps/config/db.php";
+			return new \Phalcon\Db\Adapter\Pdo\Mysql($db);
 		});
 
 		//Registering the Models-Metadata
@@ -72,7 +68,7 @@ class Application extends \Phalcon\Mvc\Application
 		});
 
         $di->set('config',function() {
-            require "config.php";
+            require "../apps/config/config.php";
             return new \Phalcon\Config($config);
         });
 
@@ -81,7 +77,6 @@ class Application extends \Phalcon\Mvc\Application
 
 	public function main()
 	{
-
 		$this->_registerServices();
 		$this->_registerAutoloaders();
 

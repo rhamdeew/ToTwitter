@@ -9,6 +9,7 @@ class IndexController extends \Phalcon\Mvc\Controller {
 
         $result = Feeds::getForTweet($config->bitly->bitlyKey,$config->bitly->oauthLogin,$config->bitly->oauthToken);
 
+//        Helper::Dump($result);
         $twitter = new Twitter(
             $config->twitter->consumerKey,
             $config->twitter->consumerSecret,

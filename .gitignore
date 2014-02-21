@@ -1,3 +1,6 @@
 .idea/
-public/settings.php
+config.php
+db.php
+apps/config/config.php
+apps/config/db.php
 
