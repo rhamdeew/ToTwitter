@@ -1,10 +1,25 @@
 ToTwitter
 =========
 
-Application based on Phalcon PHP to export RSS-records into Twitter account.
+Application based on Phalcon PHP to export RSS-records into your Twitter account.
 Long messages are divided into several smaller ones.
 
+Usage
+-----
+
+1. `git clone git@github.com:rhamdeew/ToTwitter.git`
+2. `cd ToTwitter/apps/config`
+3. `mv config-sample.php config.php`
+4. `mv db-sample.php db.php`
+5. register your twitter app in Twitter Dev Center and get openaut key for your twitter account
+6. edit config.php (twitter openauth key) && db.php (database settings)
+7. open http://site.dev in browser
+8. PROFIT =)
+
 Under the hood also:
+
 https://github.com/dg/rss-php/
+
 https://github.com/dg/twitter-php
+
 https://github.com/Falicon/BitlyPHP (modified)
