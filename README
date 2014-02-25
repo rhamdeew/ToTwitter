@@ -11,7 +11,7 @@ Usage
 2. `cd ToTwitter/apps/config`
 3. `mv config-sample.php config.php`
 4. `mv db-sample.php db.php`
-5. register your twitter app in Twitter Dev Center and get openaut key for your twitter account
+5. register your twitter app in [Twitter Dev Center](https://apps.twitter.com/app/new) and get openaut key for your twitter account
 6. edit config.php (twitter openauth key) && db.php (database settings)
 7. open http://site.dev in browser
 8. PROFIT =)
