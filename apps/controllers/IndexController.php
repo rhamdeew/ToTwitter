@@ -4,12 +4,10 @@ class IndexController extends \Phalcon\Mvc\Controller {
 
 	public function indexAction(){
 
-        echo "<meta charset='utf-8'>";
         $config = $this->config;
 
         $result = Feeds::getForTweet($config->bitly->bitlyKey,$config->bitly->oauthLogin,$config->bitly->oauthToken);
 
-//        Helper::Dump($result);
         $twitter = new Twitter(
             $config->twitter->consumerKey,
             $config->twitter->consumerSecret,
@@ -32,7 +30,9 @@ class IndexController extends \Phalcon\Mvc\Controller {
 
             $i++;
         }
-        echo "Total tweets sended: ".$i;
+
+        $this->view->setVar("result", $result);
+        $this->view->setVar("sended", $i);
 	}
 	
 }

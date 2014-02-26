@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Totwit</title>
+    <style>
+        .content p {
+            background-color: #c5e0de;
+            padding: 5px;
+        }
+        .content span {
+            background-color: rgb(183, 215, 181);
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>RSS to Twitter sender:</h2>
+    <div class="content">
+    <?php
+    foreach($result as $twit) {
+        echo "<p>".$twit["tweet"]."</p>";
+    }
+    ?>
+    <span>Total tweets sended: <?php echo $sended; ?></span>
+    </div>
+</div>
+</body>
+</html>
