@@ -4,13 +4,24 @@
     <meta charset="UTF-8">
     <title>Totwit</title>
     <style>
+        .container {
+            text-align: center;
+            color: #333333;
+        }
         .content p {
-            background-color: #c5e0de;
+            background-color: rgb(204, 238, 238);
+            border-radius: 3px;
             padding: 5px;
         }
         .content span {
-            background-color: rgb(183, 215, 181);
+            background-color: rgb(238, 238, 238);
+            border-radius: 3px;
             padding: 5px;
+        }
+        .content {
+            width: 60%;
+            margin:auto;
+            text-align: center;
         }
     </style>
 </head>
@@ -23,7 +34,7 @@
         echo "<p>".$twit["tweet"]."</p>";
     }
     ?>
-    <span>Total tweets sended: <?php echo $sended; ?></span>
+    <span>Всего твитов отправлено: <?php echo $sended; ?></span>
     </div>
 </div>
 </body>
