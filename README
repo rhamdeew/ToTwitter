@@ -4,6 +4,10 @@ ToTwitter
 Application based on Phalcon PHP to export RSS-records into your Twitter account.
 Long messages are divided into several smaller ones.
 
+Demo
+----
+[Demo](http://totwit.rh-dev.ru)
+
 Usage
 -----
 
