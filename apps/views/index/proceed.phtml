@@ -29,11 +29,13 @@
 <div class="container">
     <h2>RSS to Twitter sender:</h2>
     <div class="content">
-    <?php
-    foreach($result as $twit) {
-        echo "<p>".$twit["tweet"]."</p>";
-    }
-    ?>
+    <?php if(!empty($sended)):?>
+	    <?php
+	    foreach($result as $twit) {
+	        echo "<p>".$twit["tweet"]."</p>";
+	    }
+	    ?>    
+    <?php endif;?>
     <span>Всего твитов отправлено: <?php echo $sended; ?></span>
     </div>
 </div>
